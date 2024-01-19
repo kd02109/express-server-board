@@ -1,14 +1,18 @@
 import express from 'express';
-import dotenv from 'dotenv';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 
+import dotenv from 'dotenv';
 dotenv.config();
-const { NODE_ENV } = process.env;
+const { NODE_ENV, PORT } = process.env;
+
+import indexRoute from '@/routes/index';
+import userRoute from '@/routes/user';
+
 const app = express();
 
-app.set('port', process.env.PORT || 8080);
+app.set('port', PORT || 8080);
 
 app.use((req, res, next) => {
   if (NODE_ENV === 'development') {
@@ -34,8 +38,10 @@ app.use(
   }),
 );
 
-app.get('/', (req, res) => {
-  return res.send('HELLO EXPRESS');
+app.use('/', indexRoute);
+app.use('/user', userRoute);
+app.use((req, res, next) => {
+  return res.status(404).send('NOT FOUND');
 });
 
 app.listen(app.get('port'), () => {
