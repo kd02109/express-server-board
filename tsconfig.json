@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "ES6",
     "esModuleInterop": true,
     "target": "es2021",
     "moduleResolution": "node",
@@ -11,6 +11,6 @@
   },
   "lib": ["es2021"],
 
-  "include": ["src/*.ts"],
+  "include": ["src/*.ts", "src/*.d.ts"],
   "exclude": ["node_modules", "dist", "webpack.config.js"]    
 }
