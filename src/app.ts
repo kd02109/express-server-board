@@ -2,6 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
+import cors from "cors";
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -13,6 +14,13 @@ import userRoute from '@/routes/user';
 const app = express();
 
 app.set('port', PORT || 8080);
+
+app.use(cors({
+  origin: ['http://localhost:3000', "http://localhost:5173"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  optionsSuccessStatus: 200,
+  credentials: true
+}));
 
 app.use((req, res, next) => {
   if (NODE_ENV === 'development') {
