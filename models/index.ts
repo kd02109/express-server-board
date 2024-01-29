@@ -1,7 +1,17 @@
 import { Sequelize } from 'sequelize';
 import config from '../config/config';
+import User from './user';
+import Comment from './comment';
 
-const sequelzie = new Sequelize(
+export interface DB {
+  sequelize?: Sequelize;
+  User?: typeof User;
+  Comment?: typeof Comment;
+}
+
+const db: DB = {};
+
+const sequelize = new Sequelize(
   config.development.database,
   config.development.username,
   config.development.password,
@@ -12,4 +22,14 @@ const sequelzie = new Sequelize(
   },
 );
 
-export default sequelzie;
+db.sequelize = sequelize;
+db.User = User;
+db.Comment = Comment;
+
+User.initiate(sequelize);
+Comment.initiate(sequelize);
+
+User.associate(db);
+Comment.associate(db);
+
+export default db;
