@@ -2,7 +2,8 @@ import express from 'express';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
-import cors from "cors";
+import cors from 'cors';
+import sequelize from '../models/index';
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -15,12 +16,21 @@ const app = express();
 
 app.set('port', PORT || 8080);
 
-app.use(cors({
-  origin: ['http://localhost:3000', "http://localhost:5173"],
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  optionsSuccessStatus: 200,
-  credentials: true
-}));
+sequelize
+  .sync({ force: false })
+  .then(() => console.log('데이터베이스 연결 성공'))
+  .catch(err => {
+    console.error(err);
+  });
+
+app.use(
+  cors({
+    origin: ['http://localhost:3000', 'http://localhost:5173'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    optionsSuccessStatus: 200,
+    credentials: true,
+  }),
+);
 
 app.use((req, res, next) => {
   if (NODE_ENV === 'development') {
@@ -48,7 +58,7 @@ app.use(
 
 app.use('/', indexRoute);
 app.use('/user', userRoute);
-app.use((req, res, next) => {
+app.use((req, res) => {
   return res.status(404).send('NOT FOUND');
 });
 
